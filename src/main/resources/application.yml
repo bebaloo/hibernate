@@ -1,0 +1,10 @@
+app:
+  datasource:
+    main:
+      driver-class-name: org.postgresql.Driver
+      jdbc-url: jdbc:postgresql://localhost:5432/school-console-app
+      username: postgres
+      password: baloo
+
+      maximum-pool-size: 5
+      minimum-idle: 1
