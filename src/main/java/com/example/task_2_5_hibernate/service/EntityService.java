@@ -9,9 +9,9 @@ public interface EntityService<E, K> {
 
     E update(E entity);
 
-    E create(E entity);
+    void create(E entity);
 
-    List<E> createAll(List<E> entities);
+    void createAll(List<E> entities);
 
-    boolean delete(K id);
+    void delete(K id);
 }

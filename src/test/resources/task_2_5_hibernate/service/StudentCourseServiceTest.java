@@ -1,8 +1,9 @@
-package com.example.task_2_5_hibernate.service;
+package task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.dao.StudentCourseDao;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;
+import com.example.task_2_5_hibernate.service.StudentCourseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

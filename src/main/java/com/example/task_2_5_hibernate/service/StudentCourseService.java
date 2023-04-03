@@ -19,19 +19,19 @@ public class StudentCourseService {
         return studentCourseDao.findStudentsByCourseName(courseName);
     }
 
-    public boolean addStudentToCourse(int studentId, int courseId) {
+    public void addStudentToCourse(int studentId, int courseId) {
         log.info("Adding student to course");
-        return studentCourseDao.saveStudentToCourse(studentId, courseId);
+        studentCourseDao.saveStudentToCourse(studentId, courseId);
     }
 
-    public boolean deleteStudentFromCourse(int studentId, int courseId) {
+    public void deleteStudentFromCourse(int studentId, int courseId) {
         log.info("Deleting student from course");
-        return studentCourseDao.removeStudentFromCourse(studentId, courseId);
+        studentCourseDao.removeStudentFromCourse(studentId, courseId);
     }
 
-    public boolean deleteStudentCourse(int studentId) {
+    public void deleteStudentCourse(int studentId) {
         log.info("Deleting record with student id: " + studentId);
-        return studentCourseDao.removeStudentCourse(studentId);
+        studentCourseDao.removeStudentCourse(studentId);
     }
 
     public List<Student> getStudentsByCourseId(int courseId) {

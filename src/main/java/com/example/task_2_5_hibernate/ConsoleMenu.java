@@ -57,8 +57,8 @@ public class ConsoleMenu {
     private void findAllStudentsByCourseName() {
         courseService.getAll().forEach(System.out::println);
 
-        System.out.println("Enter id of course:");
-        String courseName = scanner.nextLine();
+        System.out.println("Enter name of course:");
+        String courseName = scanner.next();
 
         studentCourseService.getStudentsByCourseName(courseName).forEach(System.out::println);
     }
@@ -75,8 +75,8 @@ public class ConsoleMenu {
         int groupId = scanner.nextInt();
 
         Student student = new Student(firstName, lastName, groupId);
-        Student createdStudent = studentService.create(student);
-        System.out.println(createdStudent + " was created");
+        studentService.create(student);
+        System.out.println(" was created");
     }
 
     private void deleteStudentById() {
@@ -86,13 +86,7 @@ public class ConsoleMenu {
         int studentId = scanner.nextInt();
 
         studentCourseService.deleteStudentCourse(studentId);
-        boolean isDeleted = studentService.delete(studentId);
-
-        if (isDeleted) {
-            System.out.println("Student was deleted");
-        } else {
-            System.out.println("Student wasn`t deleted");
-        }
+        studentService.delete(studentId);
     }
 
     private void addStudentToCourse() {
@@ -106,13 +100,7 @@ public class ConsoleMenu {
         System.out.println("Enter course id:");
         int courseId = scanner.nextInt();
 
-        boolean isAdded = studentCourseService.addStudentToCourse(studentId, courseId);
-
-        if (isAdded) {
-            System.out.println("Student was added to course");
-        } else {
-            System.out.println("Student wasn`t added to course");
-        }
+        studentCourseService.addStudentToCourse(studentId, courseId);
     }
 
     private void removeStudentFromCourse() {
@@ -124,11 +112,6 @@ public class ConsoleMenu {
         System.out.println("Enter id of student to delete him:");
         int studentId = scanner.nextInt();
 
-        boolean isRemoved = studentCourseService.deleteStudentFromCourse(studentId, courseId);
-        if (isRemoved) {
-            System.out.println("Student was deleted from course");
-        } else {
-            System.out.println("Student wasn`t deleted from course");
-        }
+        studentCourseService.deleteStudentFromCourse(studentId, courseId);
     }
 }

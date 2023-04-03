@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +22,14 @@ public class CourseService implements EntityService<Course, Integer> {
 
     @Override
     public Course getById(Integer id) {
-        Optional<Course> course = courseDao.findById(id);
+        Course courseById = courseDao.findById(id);
+        if (courseById == null) {
+            log.info("Course with id: " + id + " not found");
+        } else {
+            log.info("Get " + courseById);
+        }
 
-        course.ifPresentOrElse(c -> log.info("Getting " + c),
-                () -> log.info("Course with id: " + id + " not found"));
-
-        return course.orElse(null);
+        return courseById;
     }
 
     @Override
@@ -45,26 +46,24 @@ public class CourseService implements EntityService<Course, Integer> {
     }
 
     @Override
-    public Course create(Course course) {
-        log.info(course + " was created");
-        return courseDao.create(course);
+    public void create(Course course) {
+        log.info("Create " + course);
+        courseDao.create(course);
     }
 
     @Override
-    public List<Course> createAll(List<Course> courses) {
-        log.info(courses + " were created");
+    public void createAll(List<Course> courses) {
+        log.info("Create " + courses);
         courseDao.createAll(courses);
-        return courses;
     }
 
     @Override
-    public boolean delete(Integer id) {
-        boolean isDeleted = courseDao.delete(id);
-        if (isDeleted) {
-            log.info("Course with id: " + id + " wasn`t deleted");
-        } else  {
-            log.info("Course with id: " + id + " was deleted");
+    public void delete(Integer id) {
+        try {
+            courseDao.delete(id);
+            log.info("Delete course with id: " + id);
+        } catch (RuntimeException e) {
+            log.warn("Course with id: " + id + " not found");
         }
-        return isDeleted;
     }
 }

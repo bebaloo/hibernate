@@ -1,5 +1,6 @@
-package com.example.task_2_5_hibernate.dao;
+package task_2_5_hibernate.dao;
 
+import com.example.task_2_5_hibernate.dao.StudentCourseDao;
 import com.example.task_2_5_hibernate.dao.mapper.StudentMapper;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;

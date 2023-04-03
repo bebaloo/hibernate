@@ -1,5 +1,6 @@
-package com.example.task_2_5_hibernate.dao;
+package task_2_5_hibernate.dao;
 
+import com.example.task_2_5_hibernate.dao.CourseDao;
 import com.example.task_2_5_hibernate.dao.mapper.CourseMapper;
 import com.example.task_2_5_hibernate.entity.Course;
 import org.junit.jupiter.api.BeforeEach;

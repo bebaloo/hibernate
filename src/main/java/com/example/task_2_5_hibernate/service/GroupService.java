@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +22,13 @@ public class GroupService implements EntityService<Group, Integer> {
 
     @Override
     public Group getById(Integer id) {
-        Optional<Group> group = groupDao.findById(id);
-
-        group.ifPresentOrElse(g -> log.info("Getting " + g),
-                () ->  log.info("Group with id: " + id + " not found"));
-
-        return group.orElse(null);
+        Group groupById = groupDao.findById(id);
+        if (groupById == null) {
+            log.info("Group with id: " + id + " not found");
+        } else {
+            log.info("Get " + groupById);
+        }
+        return groupById;
     }
 
     @Override
@@ -45,28 +45,26 @@ public class GroupService implements EntityService<Group, Integer> {
     }
 
     @Override
-    public Group create(Group group) {
-        Group createdGroup = groupDao.create(group);
-        log.info(createdGroup + " was created");
-        return createdGroup;
+    public void create(Group group) {
+        log.info("Create + " + group);
+        groupDao.create(group);
     }
 
     @Override
-    public List<Group> createAll(List<Group> groups) {
-        log.info(groups + "were created");
+    public void createAll(List<Group> groups) {
+        log.info("Create + " + groups);
         groupDao.createAll(groups);
-        return groups;
     }
 
     @Override
-    public boolean delete(Integer id) {
-        boolean isDeleted = groupDao.delete(id);
-        if (isDeleted) {
-            log.info("Group with id: " + id + " wasn`t deleted");
-        } else  {
-            log.info("Group with id: " + id + " was deleted");
+    public void delete(Integer id) {
+        try {
+            groupDao.delete(id);
+            log.info("Delete group with id: " + id);
+        } catch (RuntimeException e) {
+            log.warn("Group with id: " + id + " not found");
         }
-        return isDeleted;
+
     }
 
     public List<Group> getWithLessStudentsNumber(int studentsNumber) {

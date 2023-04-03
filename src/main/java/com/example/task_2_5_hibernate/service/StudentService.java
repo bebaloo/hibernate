@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,12 +22,13 @@ public class StudentService implements EntityService<Student, Integer> {
 
     @Override
     public Student getById(Integer id) {
-        Optional<Student> student = studentDao.findById(id);
-
-        student.ifPresentOrElse(s ->  log.info("Getting " + s),
-                () ->  log.info("Student with id: " + id + " not found"));
-
-        return student.orElse(null);
+        Student studentById = studentDao.findById(id);
+        if (studentById == null) {
+            log.info("Student with id: " + id + " not found");
+        } else {
+            log.info("Get " + studentById);
+        }
+        return studentById;
     }
 
     @Override
@@ -45,28 +45,24 @@ public class StudentService implements EntityService<Student, Integer> {
     }
 
     @Override
-    public Student create(Student student) {
-        Student createdStudent = studentDao.create(student);
-        log.info(createdStudent + " was created");
-        return createdStudent;
+    public void create(Student student) {
+        log.info("Create + " + student);
+        studentDao.create(student);
     }
 
     @Override
-    public List<Student> createAll(List<Student> students) {
-        log.info(students + "were created");
+    public void createAll(List<Student> students) {
+        log.info("Create " + students);
         studentDao.createAll(students);
-        return students;
     }
 
     @Override
-    public boolean delete(Integer id) {
-        boolean isDeleted = studentDao.delete(id);
-
-        if (isDeleted) {
-            log.info("Student with id: " + id + " wasn`t deleted");
-        } else  {
-            log.info("Student with id: " + id + " was deleted");
+    public void delete(Integer id) {
+        try {
+            studentDao.delete(id);
+            log.info("Delete student with id: " + id);
+        } catch (RuntimeException e) {
+            log.warn("Student with id: " + id + " not found");
         }
-        return isDeleted;
     }
 }
