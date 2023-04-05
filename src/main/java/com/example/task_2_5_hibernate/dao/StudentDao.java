@@ -47,6 +47,7 @@ public class StudentDao implements EntityDao<Student, Integer> {
     @Transactional
     public void delete(Integer id) {
         Student student = entityManager.find(Student.class, id);
+        student.getCourses().forEach(student::removeCourse);
         entityManager.remove(student);
     }
 

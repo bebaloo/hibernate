@@ -55,4 +55,8 @@ public class Student {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public void removeCourse(Course course) {
+        this.getCourses().remove(course);
+    }
 }
