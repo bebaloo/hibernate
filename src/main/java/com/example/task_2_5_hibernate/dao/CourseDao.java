@@ -8,22 +8,26 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class CourseDao implements EntityDao<Course, Integer> {
     private static final String FIND_ALL_QUERY = "SELECT course FROM Course course";
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public List<Course> findAll() {
-        return entityManager.createQuery(FIND_ALL_QUERY, Course.class).getResultList();
+        return entityManager
+                .createQuery(FIND_ALL_QUERY, Course.class)
+                .getResultList();
     }
 
     @Override
-    public Course findById(Integer id) {
-        return entityManager.find(Course.class, id);
+    public Optional<Course> findById(Integer id) {
+        return Optional.ofNullable(entityManager.find(Course.class, id));
     }
 
     @Override

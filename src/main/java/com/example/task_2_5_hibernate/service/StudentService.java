@@ -2,11 +2,13 @@ package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Student;
+import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,23 +24,23 @@ public class StudentService implements EntityService<Student, Integer> {
 
     @Override
     public Student getById(Integer id) {
-        Student studentById = studentDao.findById(id);
-        if (studentById == null) {
-            log.info("Student with id: " + id + " not found");
-        } else {
-            log.info("Get " + studentById);
-        }
-        return studentById;
+        Optional<Student> student = studentDao.findById(id);
+
+        student.ifPresentOrElse(s -> log.info("Getting " + s),
+                () -> log.info("Course with id: " + id + " not found"));
+
+        return student.orElse(null);
     }
 
     @Override
     public Student update(Student student) {
-        Student updatedStudent = studentDao.update(student);
-
-        if (updatedStudent == null) {
-            log.info("Student wasn`t updated");
-        } else {
+        Student updatedStudent;
+        try {
+            updatedStudent = studentDao.update(student);
             log.info(student + " was updated");
+        } catch (RuntimeException e) {
+            log.warn(student + " wasn`t updated");
+            throw new EntityNotUpdatedException(student + " wasn`t updated");
         }
 
         return updatedStudent;
@@ -46,14 +48,23 @@ public class StudentService implements EntityService<Student, Integer> {
 
     @Override
     public void create(Student student) {
-        log.info("Create + " + student);
-        studentDao.create(student);
+        try {
+            studentDao.create(student);
+            log.info("Create + " + student);
+        } catch (RuntimeException e) {
+            log.warn(student + " wasn`t created");
+            throw new EntityNotUpdatedException(student + " wasn`t created");
+        }
     }
 
     @Override
     public void createAll(List<Student> students) {
-        log.info("Create " + students);
-        studentDao.createAll(students);
+        try {
+            studentDao.createAll(students);
+            log.info("Create " + students);
+        } catch (RuntimeException e) {
+            log.warn("Students weren`t created");
+        }
     }
 
     @Override
@@ -63,6 +74,27 @@ public class StudentService implements EntityService<Student, Integer> {
             log.info("Delete student with id: " + id);
         } catch (RuntimeException e) {
             log.warn("Student with id: " + id + " not found");
+            throw new EntityNotUpdatedException("Student wasn`t deleted");
         }
+    }
+
+    public List<Student> getStudentsByCourseName(String courseName) {
+        log.info("Getting students by course name");
+        return studentDao.findStudentsByCourseName(courseName);
+    }
+
+    public void addStudentToCourse(int studentId, int courseId) {
+        log.info("Adding student with id: " + studentId + " to course with id: " + courseId);
+        studentDao.saveStudentToCourse(studentId, courseId);
+    }
+
+    public void deleteStudentFromCourse(int studentId, int courseId) {
+        log.info("Deleting student from course");
+        studentDao.removeStudentFromCourse(studentId, courseId);
+    }
+
+    public List<Student> getStudentsByCourseId(int courseId) {
+        log.info("Getting student by course id: " + courseId);
+        return studentDao.findStudentsByCourseId(courseId);
     }
 }

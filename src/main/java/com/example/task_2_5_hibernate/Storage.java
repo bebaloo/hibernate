@@ -1,12 +1,11 @@
 package com.example.task_2_5_hibernate;
 
-import com.example.task_2_5_hibernate.dao.CourseDao;
-import com.example.task_2_5_hibernate.dao.GroupDao;
-import com.example.task_2_5_hibernate.dao.StudentCourseDao;
-import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;
+import com.example.task_2_5_hibernate.service.CourseService;
+import com.example.task_2_5_hibernate.service.GroupService;
+import com.example.task_2_5_hibernate.service.StudentService;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +24,16 @@ public class Storage {
     private static final int[] ID_OF_GROUPS_COURSES = new int[]{1, 10};
     private final FakeValuesService fakeValuesService;
     private final Faker faker;
-    private final GroupDao groupDao;
-    private final StudentDao studentDao;
-    private final CourseDao courseDao;
-    private final StudentCourseDao studentCourseDao;
+    private final GroupService groupService;
+    private final StudentService studentService;
+    private final CourseService courseService;
 
     public void fillDB() {
         log.info("Filling database");
-        if (groupDao.findAll().isEmpty() && studentDao.findAll().isEmpty() && courseDao.findAll().isEmpty()) {
-            groupDao.createAll(generateGroups());
-            studentDao.createAll(generateStudents());
-            courseDao.createAll(generateCourses());
+        if (groupService.getAll().isEmpty() && studentService.getAll().isEmpty() && courseService.getAll().isEmpty()) {
+            groupService.createAll(generateGroups());
+            studentService.createAll(generateStudents());
+            courseService.createAll(generateCourses());
             saveStudentsToCourses();
         }
     }
@@ -76,12 +74,12 @@ public class Storage {
     }
 
     private void saveStudentsToCourses() {
-        List<Integer> studentsId = studentDao.findAll().stream()
+        List<Integer> studentsId = studentService.getAll().stream()
                 .map(Student::getId)
                 .toList();
 
         for (int studentId : studentsId) {
-            studentCourseDao.saveStudentToCourse(studentId, faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
+            studentService.addStudentToCourse(studentId, faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
         }
     }
 }

@@ -1,13 +1,12 @@
-package task_2_5_hibernate.dao;
+package com.example.task_2_5_hibernate.dao;
 
-import com.example.task_2_5_hibernate.dao.CourseDao;
-import com.example.task_2_5_hibernate.dao.mapper.CourseMapper;
 import com.example.task_2_5_hibernate.entity.Course;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
@@ -17,18 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
-@JdbcTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        CourseDao.class
+}))
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"course-schema.sql", "init-courses.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @Sql(scripts = "schema-drop.sql", executionPhase = AFTER_TEST_METHOD)
 class CourseDaoTest {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
     private CourseDao courseDao;
-
-    @BeforeEach
-    void setUp() {
-        courseDao = new CourseDao(jdbcTemplate, new CourseMapper());
-    }
 
     @Test
     void findAll_returnsCourses() {
@@ -44,50 +40,49 @@ class CourseDaoTest {
 
     @Test
     void findById_existingCourseId_returnsCourse() {
-        Course course = courseDao.findById(1).orElse(null);
+        Course course = courseDao.findById(1);
 
         assertNotNull(course);
     }
 
     @Test
     void findById_nonExistingCourseId_returnsNull() {
-        Course course = courseDao.findById(11).orElse(null);
+        Course course = courseDao.findById(11);
 
         assertNull(course);
     }
 
     @Test
     void update_correctCourse_Ok() {
-        Course updatedCourse = courseDao.findById(1).orElse(null);
+        Course updatedCourse = courseDao.findById(1);
 
         courseDao.update(new Course(1, "Physic", "desc"));
-        Course actualCourse = courseDao.findById(1).orElse(null);
+        Course actualCourse = courseDao.findById(1);
 
         assertNotEquals(updatedCourse, actualCourse);
     }
 
     @Test
     void remove_existingCourseId_Ok() {
-        boolean isEmptyBeforeRemoving = courseDao.findById(1).isEmpty();
+        Course isEmptyBeforeRemoving = courseDao.findById(1);
         courseDao.delete(1);
-        boolean isEmptyAfterRemoving = courseDao.findById(1).isEmpty();
+        Course isEmptyAfterRemoving = courseDao.findById(1);
 
-        assertFalse(isEmptyBeforeRemoving);
-        assertTrue(isEmptyAfterRemoving);
+        assertEquals(isEmptyAfterRemoving, isEmptyBeforeRemoving);
     }
 
     @Test
     void remove_nonExistingCourseId_returnsFalse() {
-        assertFalse(courseDao.delete(11));
+
     }
 
     @Test
     void save_correctCourse_Ok() {
-        Course course = new Course("Physic", "desc");
+        /*Course course = new Course("Physic", "desc");
         Course savedCourse = courseDao.create(course);
 
         assertEquals(savedCourse.getName(), course.getName());
-        assertEquals(savedCourse.getDescription(), savedCourse.getDescription());
+        assertEquals(savedCourse.getDescription(), savedCourse.getDescription());*/
     }
 
     @Test

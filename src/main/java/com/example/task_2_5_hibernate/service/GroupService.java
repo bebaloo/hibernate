@@ -2,11 +2,13 @@ package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.dao.GroupDao;
 import com.example.task_2_5_hibernate.entity.Group;
+import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,23 +24,23 @@ public class GroupService implements EntityService<Group, Integer> {
 
     @Override
     public Group getById(Integer id) {
-        Group groupById = groupDao.findById(id);
-        if (groupById == null) {
-            log.info("Group with id: " + id + " not found");
-        } else {
-            log.info("Get " + groupById);
-        }
-        return groupById;
+        Optional<Group> group = groupDao.findById(id);
+
+        group.ifPresentOrElse(g -> log.info("Getting " + g),
+                () -> log.info("Course with id: " + id + " not found"));
+
+        return group.orElse(null);
     }
 
     @Override
     public Group update(Group group) {
-        Group updatedGroup = groupDao.update(group);
-
-        if (updatedGroup == null) {
-            log.info("Group wasn`t updated");
-        } else {
+        Group updatedGroup;
+        try {
+            updatedGroup = groupDao.update(group);
             log.info(group + " was updated");
+        } catch (RuntimeException e) {
+            log.warn("Group wasn`t updated");
+            throw new EntityNotUpdatedException(group + " wasn`t updated");
         }
 
         return updatedGroup;
@@ -46,14 +48,23 @@ public class GroupService implements EntityService<Group, Integer> {
 
     @Override
     public void create(Group group) {
-        log.info("Create + " + group);
-        groupDao.create(group);
+       try {
+           groupDao.create(group);
+           log.info("Create + " + group);
+       } catch (RuntimeException e) {
+           log.warn( group + " wasn`t created");
+           throw new EntityNotUpdatedException(group + " wasn`t created");
+       }
     }
 
     @Override
     public void createAll(List<Group> groups) {
-        log.info("Create + " + groups);
-        groupDao.createAll(groups);
+        try {
+            groupDao.createAll(groups);
+            log.info("Create + " + groups);
+        } catch (RuntimeException e) {
+            log.warn("Groups weren`t created");
+        }
     }
 
     @Override
@@ -63,8 +74,8 @@ public class GroupService implements EntityService<Group, Integer> {
             log.info("Delete group with id: " + id);
         } catch (RuntimeException e) {
             log.warn("Group with id: " + id + " not found");
+            throw new EntityNotUpdatedException("Group wasn`t deleted");
         }
-
     }
 
     public List<Group> getWithLessStudentsNumber(int studentsNumber) {

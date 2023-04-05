@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,12 +21,14 @@ public class GroupDao implements EntityDao<Group, Integer> {
 
     @Override
     public List<Group> findAll() {
-        return entityManager.createQuery(FIND_ALL, Group.class).getResultList();
+        return entityManager
+                .createQuery(FIND_ALL, Group.class)
+                .getResultList();
     }
 
     @Override
-    public Group findById(Integer id) {
-        return entityManager.find(Group.class, id);
+    public Optional<Group> findById(Integer id) {
+        return Optional.ofNullable(entityManager.find(Group.class, id));
     }
 
     @Override

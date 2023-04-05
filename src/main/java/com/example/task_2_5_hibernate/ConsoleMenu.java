@@ -4,7 +4,6 @@ package com.example.task_2_5_hibernate;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.service.CourseService;
 import com.example.task_2_5_hibernate.service.GroupService;
-import com.example.task_2_5_hibernate.service.StudentCourseService;
 import com.example.task_2_5_hibernate.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import java.util.Scanner;
 public class ConsoleMenu {
     private final StudentService studentService;
     private final GroupService groupService;
-    private final StudentCourseService studentCourseService;
     private final CourseService courseService;
     private final Scanner scanner = new Scanner(System.in);
 
@@ -60,7 +58,7 @@ public class ConsoleMenu {
         System.out.println("Enter name of course:");
         String courseName = scanner.next();
 
-        studentCourseService.getStudentsByCourseName(courseName).forEach(System.out::println);
+        studentService.getStudentsByCourseName(courseName).forEach(System.out::println);
     }
 
     private void addNewStudent() {
@@ -75,8 +73,13 @@ public class ConsoleMenu {
         int groupId = scanner.nextInt();
 
         Student student = new Student(firstName, lastName, groupId);
-        studentService.create(student);
-        System.out.println(" was created");
+        try {
+            studentService.create(student);
+            System.out.println(student + " was created");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private void deleteStudentById() {
@@ -85,8 +88,12 @@ public class ConsoleMenu {
         System.out.println("Enter id of student:");
         int studentId = scanner.nextInt();
 
-        studentCourseService.deleteStudentCourse(studentId);
-        studentService.delete(studentId);
+        try {
+            studentService.delete(studentId);
+            System.out.println("Student was deleted");
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void addStudentToCourse() {
@@ -100,7 +107,8 @@ public class ConsoleMenu {
         System.out.println("Enter course id:");
         int courseId = scanner.nextInt();
 
-        studentCourseService.addStudentToCourse(studentId, courseId);
+        studentService.addStudentToCourse(studentId, courseId);
+        System.out.println("Student with id: " + studentId + " was added to course with id: " + courseId);
     }
 
     private void removeStudentFromCourse() {
@@ -108,10 +116,11 @@ public class ConsoleMenu {
         System.out.println("Enter id of course:");
         int courseId = scanner.nextInt();
 
-        studentCourseService.getStudentsByCourseId(courseId).forEach(System.out::println);
+        studentService.getStudentsByCourseId(courseId).forEach(System.out::println);
         System.out.println("Enter id of student to delete him:");
         int studentId = scanner.nextInt();
 
-        studentCourseService.deleteStudentFromCourse(studentId, courseId);
+        studentService.deleteStudentFromCourse(studentId, courseId);
+        System.out.println("Student with id: " + studentId + " was deleted from course with id: " + courseId);
     }
 }

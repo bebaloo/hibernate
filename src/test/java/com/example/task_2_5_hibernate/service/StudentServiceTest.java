@@ -1,4 +1,4 @@
-package task_2_5_hibernate.service;
+package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Group;
