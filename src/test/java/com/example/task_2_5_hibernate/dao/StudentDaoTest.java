@@ -1,24 +1,30 @@
 package com.example.task_2_5_hibernate.dao;
 
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import com.example.task_2_5_hibernate.entity.Group;
+import com.example.task_2_5_hibernate.entity.Student;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
-@JdbcTest
-@Sql(scripts = {"student-schema.sql", "init-students.sql"},
-        executionPhase = BEFORE_TEST_METHOD)
-@Sql(scripts = "schema-drop.sql", executionPhase = AFTER_TEST_METHOD)
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+        StudentDao.class
+}))
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Sql(value = {"student-schema.sql", "init-students.sql"}, executionPhase = BEFORE_TEST_METHOD)
+@ComponentScan("com.example.task_2_5_hibernate.dao")
 class StudentDaoTest {
-
-   /* @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private StudentDao studentDao;
-    @BeforeEach
-    void setUp() {
-        studentDao = new StudentDao(jdbcTemplate, new StudentMapper());
-    }
 
     @Test
     void findAll_returnsStudents() {
@@ -30,7 +36,7 @@ class StudentDaoTest {
         List<Student> actualStudents = studentDao.findAll().stream()
                 .map(student -> new Student(student.getFirstName(), student.getLastName()))
                 .toList();
-        assertEquals(expectedStudents, actualStudents);
+        assertTrue(actualStudents.containsAll(expectedStudents));
     }
 
     @Test
@@ -51,8 +57,7 @@ class StudentDaoTest {
     void update_correctStudent_Ok() {
         Student updatedStudent = studentDao.findById(1).orElse(null);
 
-        studentDao.update(new Student(1 ,new Group(1, "aa-11"),"Igor", "Frolov"));
-        Student actualStudent = studentDao.findById(1).orElse(null);
+        Student actualStudent = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
 
         assertNotEquals(updatedStudent, actualStudent);
     }
@@ -65,36 +70,12 @@ class StudentDaoTest {
         assertTrue(isEmptyAfterRemoving);
     }
 
-    @Test
-    void remove_nonExistingStudent_throwsException() {
-        assertFalse(studentDao.delete(201));
-
-    }
-
 
     @Test
     void save_correctStudent_Ok() {
         Student student = new Student(new Group(1, "aa-11"), "Oleg", "Guk");
         Student savedStudent = studentDao.create(student);
 
-        assertEquals(savedStudent.getGroup(), student.getGroup());
-        assertEquals(savedStudent.getFirstName(), student.getFirstName());
-        assertEquals(savedStudent.getLastName(), student.getLastName());
+        assertEquals(savedStudent, student);
     }
-
-    @Test
-    void saveAll_correctStudents_Ok() {
-        List<Student> students = new ArrayList<>();
-        students.add(new Student(new Group(1, "aa-11"), "Misha", "Misha"));
-        students.add(new Student(new Group(1, "aa-11"), "Oleg", "Guk"));
-
-        studentDao.createAll(students);
-
-        List<Student> savedStudents = studentDao.findAll().stream()
-                .map(s -> new Student(s.getGroup(), s.getFirstName(), s.getLastName()))
-                .toList();
-        boolean isSaved = savedStudents.containsAll(students);
-
-        assertTrue(isSaved);
-    }*/
 }

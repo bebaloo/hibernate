@@ -3,16 +3,13 @@ package com.example.task_2_5_hibernate.service;
 import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;
-import com.example.task_2_5_hibernate.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {StudentService.class})
 class StudentServiceTest {
@@ -31,17 +28,13 @@ class StudentServiceTest {
 
     @Test
     void delete_correctId_Ok() {
-        when(studentDao.delete(any(Integer.TYPE))).thenReturn(true);
-
-        assertEquals(true, studentService.delete(2));
+        studentService.delete(1);
         verify(studentDao).delete(any());
     }
 
     @Test
     void delete_incorrectId_Ok() {
-        when(studentDao.delete(any(Integer.TYPE))).thenReturn(false);
-
-        assertEquals(false, studentService.delete(10000));
+        studentService.delete(210);
         verify(studentDao).delete(any(Integer.TYPE));
     }
 }
