@@ -9,13 +9,13 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
-    private int id;
+    private Integer id;
     @Column(name = "group_name")
     private String name;
 
@@ -26,5 +26,6 @@ public class Group {
     public Group(int id) {
         this.id = id;
     }
+
 }
 

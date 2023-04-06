@@ -47,10 +47,11 @@ public class GroupService implements EntityService<Group, Integer> {
     }
 
     @Override
-    public void create(Group group) {
+    public Group create(Group group) {
        try {
-           groupDao.create(group);
+           Group createdGroup = groupDao.create(group);
            log.info("Create + " + group);
+           return createdGroup;
        } catch (RuntimeException e) {
            log.warn( group + " wasn`t created");
            throw new EntityNotUpdatedException(group + " wasn`t created");

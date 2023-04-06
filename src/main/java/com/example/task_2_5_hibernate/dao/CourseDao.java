@@ -45,9 +45,10 @@ public class CourseDao implements EntityDao<Course, Integer> {
 
     @Override
     @Transactional
-    public void create(Course course) {
+    public Course create(Course course) {
         entityManager.persist(course);
-
+        entityManager.flush();
+        return course;
     }
 
     @Override

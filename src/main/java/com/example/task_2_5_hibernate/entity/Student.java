@@ -11,13 +11,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString
+@EqualsAndHashCode
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
-    private int id;
+    private Integer id;
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
@@ -57,6 +57,7 @@ public class Student {
     }
 
     public void removeCourse(Course course) {
-        this.getCourses().remove(course);
+        this.courses.remove(course);
+        course.getStudents().remove(this);
     }
 }

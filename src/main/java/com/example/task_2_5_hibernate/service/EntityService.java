@@ -9,7 +9,7 @@ public interface EntityService<E, K> {
 
     E update(E entity);
 
-    void create(E entity);
+    E create(E entity);
 
     void createAll(List<E> entities);
 

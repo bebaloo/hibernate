@@ -47,10 +47,11 @@ public class CourseService implements EntityService<Course, Integer> {
     }
 
     @Override
-    public void create(Course course) {
+    public Course create(Course course) {
         try {
-            courseDao.create(course);
+            Course createdCourse = courseDao.create(course);
             log.info("Create " + course);
+            return createdCourse;
         } catch (RuntimeException e) {
             log.warn(course + " wasn`t created");
             throw new EntityNotUpdatedException(course + " wasn`t created");

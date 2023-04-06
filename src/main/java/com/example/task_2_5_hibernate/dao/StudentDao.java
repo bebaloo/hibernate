@@ -1,5 +1,6 @@
 package com.example.task_2_5_hibernate.dao;
 
+import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,13 +19,11 @@ public class StudentDao implements EntityDao<Student, Integer> {
             "SELECT course.students FROM Course course WHERE name = :name";
     private static final String FIND_STUDENTS_BY_COURSE_ID_QUERY =
             "SELECT course.students FROM Course course WHERE id = :course_id";
-    private static final String ADD_STUDENT_TO_COURSE_QUERY =
-            "INSERT INTO students_courses(student_id, course_id) VALUES (:student_id, :course_id)";
-    private static final String REMOVE_STUDENT_FROM_COURSE_QUERY =
-            "DELETE FROM students_courses WHERE student_id = :student_id AND course_id = :course_id";
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private final CourseDao courseDao;
 
     public List<Student> findAll() {
         return entityManager
@@ -53,8 +52,10 @@ public class StudentDao implements EntityDao<Student, Integer> {
 
     @Override
     @Transactional
-    public void create(Student student) {
+    public Student create(Student student) {
         entityManager.persist(student);
+        entityManager.flush();
+        return student;
     }
 
     @Override
@@ -70,17 +71,19 @@ public class StudentDao implements EntityDao<Student, Integer> {
                 .getResultList();
     }
 
+    @Transactional
     public void saveStudentToCourse(int studentId, int courseId) {
-        entityManager.createNativeQuery(ADD_STUDENT_TO_COURSE_QUERY)
-                .setParameter("student_id", studentId)
-                .setParameter("course_id", courseId);
+        Student student = findById(studentId).orElse(null);
+        if (student != null) {
+            student.getCourses().add(courseDao.findById(courseId).orElse(null));
+        }
+        entityManager.merge(student);
     }
 
-    public void removeStudentFromCourse(int studentId, int courseId) {
-        entityManager
-                .createNativeQuery(REMOVE_STUDENT_FROM_COURSE_QUERY)
-                .setParameter("student_id", studentId)
-                .setParameter("course_id", courseId);
+    @Transactional
+    public void removeStudentFromCourse(Student student, Course course) {
+        student.removeCourse(course);
+        entityManager.merge(student);
     }
 
     public List<Student> findStudentsByCourseId(int courseId) {

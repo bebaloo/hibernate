@@ -1,6 +1,7 @@
 package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.dao.StudentDao;
+import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +48,11 @@ public class StudentService implements EntityService<Student, Integer> {
     }
 
     @Override
-    public void create(Student student) {
+    public Student create(Student student) {
         try {
-            studentDao.create(student);
+            Student createdStudent = studentDao.create(student);
             log.info("Create + " + student);
+            return createdStudent;
         } catch (RuntimeException e) {
             log.warn(student + " wasn`t created");
             throw new EntityNotUpdatedException(student + " wasn`t created");
@@ -88,9 +90,9 @@ public class StudentService implements EntityService<Student, Integer> {
         studentDao.saveStudentToCourse(studentId, courseId);
     }
 
-    public void deleteStudentFromCourse(int studentId, int courseId) {
+    public void deleteStudentFromCourse(Student student, Course course) {
         log.info("Deleting student from course");
-        studentDao.removeStudentFromCourse(studentId, courseId);
+        studentDao.removeStudentFromCourse(student, course);
     }
 
     public List<Student> getStudentsByCourseId(int courseId) {

@@ -1,6 +1,7 @@
 package com.example.task_2_5_hibernate;
 
 
+import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.service.CourseService;
 import com.example.task_2_5_hibernate.service.GroupService;
@@ -115,12 +116,14 @@ public class ConsoleMenu {
         courseService.getAll().forEach(System.out::println);
         System.out.println("Enter id of course:");
         int courseId = scanner.nextInt();
+        Course course = courseService.getById(courseId);
 
         studentService.getStudentsByCourseId(courseId).forEach(System.out::println);
         System.out.println("Enter id of student to delete him:");
         int studentId = scanner.nextInt();
 
-        studentService.deleteStudentFromCourse(studentId, courseId);
+        Student student = studentService.getById(studentId);
+        studentService.deleteStudentFromCourse(student, course);
         System.out.println("Student with id: " + studentId + " was deleted from course with id: " + courseId);
     }
 }

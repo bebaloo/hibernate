@@ -45,8 +45,10 @@ public class GroupDao implements EntityDao<Group, Integer> {
 
     @Override
     @Transactional
-    public void create(Group group) {
+    public Group create(Group group) {
        entityManager.persist(group);
+       entityManager.flush();
+       return group;
     }
 
     @Override
