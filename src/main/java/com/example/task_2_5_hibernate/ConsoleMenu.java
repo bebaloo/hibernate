@@ -123,7 +123,7 @@ public class ConsoleMenu {
         int studentId = scanner.nextInt();
 
         Student student = studentService.getById(studentId);
-        studentService.deleteStudentFromCourse(student, course);
+        studentService.removeStudentFromCourse(student, course);
         System.out.println("Student with id: " + studentId + " was deleted from course with id: " + courseId);
     }
 }

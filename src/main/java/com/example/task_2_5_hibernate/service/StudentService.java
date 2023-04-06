@@ -90,7 +90,7 @@ public class StudentService implements EntityService<Student, Integer> {
         studentDao.saveStudentToCourse(studentId, courseId);
     }
 
-    public void deleteStudentFromCourse(Student student, Course course) {
+    public void removeStudentFromCourse(Student student, Course course) {
         log.info("Deleting student from course");
         studentDao.removeStudentFromCourse(student, course);
     }
