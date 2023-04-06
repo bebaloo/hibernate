@@ -21,7 +21,6 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"groups-schema.sql", "init-groups.sql"}, executionPhase = BEFORE_TEST_METHOD)
 class GroupDaoTest {
-
     @Autowired
     private GroupDao groupDao;
 
