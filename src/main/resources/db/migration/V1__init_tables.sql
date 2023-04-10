@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS courses
 CREATE TABLE IF NOT EXISTS students
 (
     student_id serial PRIMARY KEY,
-    group_id   INT REFERENCES groups (group_id),
     first_name VARCHAR NOT NULL,
     last_name  VARCHAR NOT NULL
 );

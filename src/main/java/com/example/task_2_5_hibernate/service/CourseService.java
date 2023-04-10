@@ -1,6 +1,6 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.dao.CourseDao;
+import com.example.task_2_5_hibernate.dao.CourseRepository;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
@@ -13,18 +13,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class CourseService implements EntityService<Course, Integer> {
-    private final CourseDao courseDao;
+public class CourseService implements EntityService<Course, Long> {
+    private final CourseRepository courseRepository;
 
     @Override
     public List<Course> getAll() {
         log.info("Getting all courses");
-        return courseDao.findAll();
+        return courseRepository.findAll();
     }
 
     @Override
-    public Course getById(Integer id) {
-        Optional<Course> course = courseDao.findById(id);
+    public Course getById(Long id) {
+        Optional<Course> course = courseRepository.findById(id);
 
         course.ifPresentOrElse(c -> log.info("Getting " + c),
                 () -> log.info("Course with id: " + id + " not found"));
@@ -34,23 +34,29 @@ public class CourseService implements EntityService<Course, Integer> {
 
     @Override
     public Course update(Course course) {
-        Course updatedCourse;
         try {
-            updatedCourse = courseDao.update(course);
-            log.info(updatedCourse + " was updated");
+            return courseRepository.findById(course.getId())
+                    .map(foundCourse -> {
+                        foundCourse.setName(course.getName());
+                        foundCourse.setDescription(course.getDescription());
+
+                        log.info(course + "was updated");
+
+                        return courseRepository.save(foundCourse);
+                    })
+                    .orElseThrow(EntityNotUpdatedException::new);
         } catch (RuntimeException e) {
             log.warn(course + " wasn`t updated");
             throw new EntityNotUpdatedException(course + " wasn`t updated");
         }
-
-        return updatedCourse;
     }
 
     @Override
     public Course create(Course course) {
         try {
-            Course createdCourse = courseDao.create(course);
+            Course createdCourse = courseRepository.save(course);
             log.info("Create " + course);
+
             return createdCourse;
         } catch (RuntimeException e) {
             log.warn(course + " wasn`t created");
@@ -61,7 +67,7 @@ public class CourseService implements EntityService<Course, Integer> {
     @Override
     public void createAll(List<Course> courses) {
         try {
-            courseDao.createAll(courses);
+            courseRepository.saveAll(courses);
             log.info("Create " + courses);
         } catch (RuntimeException e) {
             log.warn("Courses wasn`t created");
@@ -69,9 +75,11 @@ public class CourseService implements EntityService<Course, Integer> {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         try {
-            courseDao.delete(id);
+            Course course = courseRepository.findById(id).orElseThrow(EntityNotUpdatedException::new);
+            courseRepository.delete(course);
+
             log.info("Delete course with id: " + id);
         } catch (RuntimeException e) {
             log.warn("Course with id: " + id + " not found");
