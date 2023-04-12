@@ -2,7 +2,10 @@ package com.example.task_2_5_hibernate.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.Hibernate;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -11,8 +14,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@EqualsAndHashCode
+//@ToString
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class Course {
     private String description;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
-    private Set<Student> students;
+    private Set<Student> students = new HashSet<>();
 
     public Course(int id, String name, String desc) {
         this.id = id;
@@ -35,5 +37,18 @@ public class Course {
     public Course(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Course course = (Course) o;
+        return id != null && Objects.equals(id, course.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

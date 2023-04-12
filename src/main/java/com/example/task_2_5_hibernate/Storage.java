@@ -79,7 +79,9 @@ public class Storage {
                 .toList();
 
         for (int studentId : studentsId) {
-            studentService.addStudentToCourse(studentId, faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
+            Student student = studentService.getById(studentId);
+            Course course = courseService.getById(faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
+            studentService.addStudentToCourse(student, course);
         }
     }
 }

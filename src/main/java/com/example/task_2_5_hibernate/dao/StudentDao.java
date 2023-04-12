@@ -23,8 +23,6 @@ public class StudentDao implements EntityDao<Student, Integer> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final CourseDao courseDao;
-
     public List<Student> findAll() {
         return entityManager
                 .createQuery(FIND_ALL_QUERY, Student.class)
@@ -72,11 +70,8 @@ public class StudentDao implements EntityDao<Student, Integer> {
     }
 
     @Transactional
-    public void saveStudentToCourse(int studentId, int courseId) {
-        Student student = findById(studentId).orElse(null);
-        if (student != null) {
-            student.getCourses().add(courseDao.findById(courseId).orElse(null));
-        }
+    public void saveStudentToCourse(Student student, Course course) {
+        student.getCourses().add(course);
         entityManager.merge(student);
     }
 
