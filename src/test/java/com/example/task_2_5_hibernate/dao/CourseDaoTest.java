@@ -58,11 +58,11 @@ class CourseDaoTest {
 
     @Test
     void update_correctCourse_Ok() {
-        Course updatedCourse = courseDao.findById(1).orElse(null);
-        assertEquals(updatedCourse, new Course(1, "English", "desc"));
+        Course courseBeforeUpdate = courseDao.findById(1).orElse(null);
+        assertEquals(courseBeforeUpdate, new Course(1, "English", "desc"));
 
-        Course actualCourse = courseDao.update(new Course(1, "Physic", "desc"));
-        assertEquals(actualCourse, new Course(1, "Physic", "desc"));
+        Course courseAfterUpdate = courseDao.update(new Course(1, "Physic", "desc"));
+        assertEquals(courseAfterUpdate, new Course(1, "Physic", "desc"));
     }
 
     @Test

@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
+@ToString
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +30,9 @@ public class Student {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "students_courses",
-    joinColumns = {@JoinColumn(name = "student_id")},
-    inverseJoinColumns = {@JoinColumn(name = "course_id")})
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "course_id")})
+    @ToString.Exclude
     private Set<Course> courses = new HashSet<>();
 
     public Student(Group group, String firstName, String lastName) {

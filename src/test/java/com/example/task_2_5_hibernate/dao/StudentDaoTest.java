@@ -56,12 +56,12 @@ class StudentDaoTest {
 
     @Test
     void update_correctStudent_Ok() {
-        Student updatedStudent = studentDao.findById(1).orElse(null);
-        assertEquals(updatedStudent, new Student(1, new Group(1, "aa-11"), "Dima", "Tkachuk"));
+        Student studentBeforeUpdate = studentDao.findById(1).orElse(null);
+        assertEquals(studentBeforeUpdate, new Student(1, new Group(1, "aa-11"), "Dima", "Tkachuk"));
 
-        Student actualStudent = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
+        Student studentAfterUpdate = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
 
-        assertEquals(actualStudent, new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
+        assertEquals(studentAfterUpdate, new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
     }
 
     @Test

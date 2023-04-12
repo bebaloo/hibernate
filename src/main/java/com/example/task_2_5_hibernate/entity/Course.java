@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-//@ToString
+@ToString
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,9 @@ public class Course {
     @Column(name = "course_description")
     private String description;
 
+
     @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
+    @ToString.Exclude
     private Set<Student> students = new HashSet<>();
 
     public Course(int id, String name, String desc) {

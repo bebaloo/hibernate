@@ -57,12 +57,12 @@ class GroupDaoTest {
 
     @Test
     void update_correctGroup_Ok() {
-        Group updatedGroup = groupDao.findById(1).orElse(null);
-        assertEquals(updatedGroup, new Group(1, "aa-11"));
+        Group groupBeforeUpdate = groupDao.findById(1).orElse(null);
+        assertEquals(groupBeforeUpdate, new Group(1, "aa-11"));
 
-        Group actualGroup = groupDao.update(new Group(1, "w-11"));
+        Group groupAfterUpdate = groupDao.update(new Group(1, "w-11"));
 
-        assertEquals(actualGroup, new Group(1, "w-11"));
+        assertEquals(groupAfterUpdate, new Group(1, "w-11"));
     }
 
     @Test
