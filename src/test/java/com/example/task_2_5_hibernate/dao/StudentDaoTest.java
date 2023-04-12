@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -21,7 +22,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"student-schema.sql", "init-students.sql"}, executionPhase = BEFORE_TEST_METHOD)
-@ComponentScan("com.example.task_2_5_hibernate.dao")
+@Sql(value = "clear-students.sql", executionPhase = AFTER_TEST_METHOD)
 class StudentDaoTest {
     @Autowired
     private StudentDao studentDao;
@@ -55,11 +56,12 @@ class StudentDaoTest {
 
     @Test
     void update_correctStudent_Ok() {
-        Student updatedStudent = studentDao.findById(1).orElse(null);
+        Student studentBeforeUpdate = studentDao.findById(1).orElse(null);
+        assertEquals(studentBeforeUpdate, new Student(1, new Group(1, "aa-11"), "Dima", "Tkachuk"));
 
-        Student actualStudent = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
+        Student studentAfterUpdate = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
 
-        assertNotEquals(updatedStudent, actualStudent);
+        assertEquals(studentAfterUpdate, new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.example.task_2_5_hibernate.service;
 
+import com.example.task_2_5_hibernate.dao.CourseDao;
 import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Log4j2
 public class StudentService implements EntityService<Student, Integer> {
     private final StudentDao studentDao;
+    private final CourseDao courseDao;
 
     @Override
     public List<Student> getAll() {
@@ -85,9 +87,9 @@ public class StudentService implements EntityService<Student, Integer> {
         return studentDao.findStudentsByCourseName(courseName);
     }
 
-    public void addStudentToCourse(int studentId, int courseId) {
-        log.info("Adding student with id: " + studentId + " to course with id: " + courseId);
-        studentDao.saveStudentToCourse(studentId, courseId);
+    public void addStudentToCourse(Student student, Course course) {
+        log.info("Adding " + student + " to course " + course);
+        studentDao.saveStudentToCourse(student, course);
     }
 
     public void removeStudentFromCourse(Student student, Course course) {

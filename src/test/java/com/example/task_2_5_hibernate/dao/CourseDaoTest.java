@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -20,6 +21,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TE
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"course-schema.sql", "init-courses.sql"}, executionPhase = BEFORE_TEST_METHOD)
+@Sql(value = {"clear-courses.sql"}, executionPhase = AFTER_TEST_METHOD)
 class CourseDaoTest {
     @Autowired
     private CourseDao courseDao;
@@ -56,11 +58,11 @@ class CourseDaoTest {
 
     @Test
     void update_correctCourse_Ok() {
-        Course updatedCourse = courseDao.findById(1).orElse(null);
+        Course courseBeforeUpdate = courseDao.findById(1).orElse(null);
+        assertEquals(courseBeforeUpdate, new Course(1, "English", "desc"));
 
-        Course actualCourse = courseDao.update(new Course(1, "Physic", "desc"));
-
-        assertNotEquals(updatedCourse, actualCourse);
+        Course courseAfterUpdate = courseDao.update(new Course(1, "Physic", "desc"));
+        assertEquals(courseAfterUpdate, new Course(1, "Physic", "desc"));
     }
 
     @Test

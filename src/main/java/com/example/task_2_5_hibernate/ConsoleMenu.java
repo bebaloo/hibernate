@@ -102,13 +102,15 @@ public class ConsoleMenu {
 
         System.out.println("Enter student id:");
         int studentId = scanner.nextInt();
+        Student student = studentService.getById(studentId);
 
         courseService.getAll().forEach(System.out::println);
 
         System.out.println("Enter course id:");
         int courseId = scanner.nextInt();
+        Course course = courseService.getById(courseId);
 
-        studentService.addStudentToCourse(studentId, courseId);
+        studentService.addStudentToCourse(student, course);
         System.out.println("Student with id: " + studentId + " was added to course with id: " + courseId);
     }
 
