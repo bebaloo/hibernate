@@ -30,13 +30,12 @@ class StudentDaoTest {
     @Test
     void findAll_returnsStudents() {
         List<Student> expectedStudents = new ArrayList<>();
-        expectedStudents.add(new Student("Dima", "Tkachuk"));
-        expectedStudents.add(new Student("Yarik", "Shevchenko"));
-        expectedStudents.add(new Student("Olga", "Melnyk"));
+        expectedStudents.add(new Student(1, new Group(1), "Dima", "Tkachuk"));
+        expectedStudents.add(new Student(2, new Group(1), "Yarik", "Shevchenko"));
+        expectedStudents.add(new Student(3, new Group(1), "Olga", "Melnyk"));
 
-        List<Student> actualStudents = studentDao.findAll().stream()
-                .map(student -> new Student(student.getFirstName(), student.getLastName()))
-                .toList();
+        List<Student> actualStudents = studentDao.findAll();
+
         assertTrue(actualStudents.containsAll(expectedStudents));
     }
 

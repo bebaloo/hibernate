@@ -1,6 +1,5 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.dao.CourseDao;
 import com.example.task_2_5_hibernate.dao.StudentDao;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @Log4j2
 public class StudentService implements EntityService<Student, Integer> {
     private final StudentDao studentDao;
-    private final CourseDao courseDao;
 
     @Override
     public List<Student> getAll() {

@@ -29,15 +29,11 @@ class CourseDaoTest {
     @Test
     void findAll_returnsCourses() {
         List<Course> expectedCourses = new ArrayList<>();
-        expectedCourses.add(new Course("English", "desc"));
-        expectedCourses.add(new Course("Math", "desc"));
-        expectedCourses.add(new Course("Art", "desc"));
+        expectedCourses.add(new Course(1,"English", "desc"));
+        expectedCourses.add(new Course(2, "Math", "desc"));
+        expectedCourses.add(new Course(3, "Art", "desc"));
 
-        List<Course> actualCourses = courseDao.findAll()
-                .stream()
-                .map(course -> new Course(course.getName(), course.getDescription()))
-                .toList();
-
+        List<Course> actualCourses = courseDao.findAll();
 
         assertTrue(actualCourses.containsAll(expectedCourses));
     }

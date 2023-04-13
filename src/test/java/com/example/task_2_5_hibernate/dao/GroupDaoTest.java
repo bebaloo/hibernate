@@ -29,14 +29,11 @@ class GroupDaoTest {
     @Test
     void findAll_returnsGroups() {
         List<Group> expectedGroups = new ArrayList<>();
-        expectedGroups.add(new Group("aa-11"));
-        expectedGroups.add(new Group("bb-22"));
-        expectedGroups.add(new Group("cc-33"));
+        expectedGroups.add(new Group(1, "aa-11"));
+        expectedGroups.add(new Group(2, "bb-22"));
+        expectedGroups.add(new Group(3, "cc-33"));
 
-        List<Group> actualGroups = groupDao.findAll()
-                .stream()
-                .map(group -> new Group(group.getName()))
-                .toList();
+        List<Group> actualGroups = groupDao.findAll();
 
         assertTrue(actualGroups.containsAll(expectedGroups));
     }
