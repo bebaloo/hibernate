@@ -16,7 +16,7 @@ import java.util.Set;
 @ToString
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "course_id")
     private Long id;
     @Column(name = "course_name")

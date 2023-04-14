@@ -88,6 +88,6 @@ public class GroupService implements EntityService<Group, Long> {
 
     public List<Group> getWithLessStudentsNumber(int studentsNumber) {
         log.info("Getting group with less student number: " + studentsNumber);
-        return groupRepository.findGroupsByStudents(studentsNumber);
+        return groupRepository.findGroupsByStudentsNumber(studentsNumber);
     }
 }

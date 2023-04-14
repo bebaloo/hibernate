@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
     @Query("SELECT g FROM Group g JOIN Student s ON g = s.group GROUP BY s.group, g.name, g.id HAVING count(s.group) < :studentsNumber")
-    List<Group> findGroupsByStudents(@Param("studentsNumber") int studentsNumber);
+    List<Group> findGroupsByStudentsNumber(@Param("studentsNumber") int studentsNumber);
 }
