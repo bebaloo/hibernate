@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class Student {
     joinColumns = {@JoinColumn(name = "student_id")},
     inverseJoinColumns = {@JoinColumn(name = "course_id")})
     @ToString.Exclude
-    private Set<Course> courses;
+    private Set<Course> courses = new HashSet<>();
 
     public Student(Group group, String firstName, String lastName) {
         this.group = group;

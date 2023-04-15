@@ -1,6 +1,6 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.dao.CourseRepository;
+import com.example.task_2_5_hibernate.repository.CourseRepository;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
@@ -65,22 +65,26 @@ public class CourseService implements EntityService<Course, Long> {
     }
 
     @Override
-    public void createAll(List<Course> courses) {
+    public List<Course> createAll(List<Course> courses) {
         try {
-            courseRepository.saveAll(courses);
+            List<Course> createdCourses = courseRepository.saveAll(courses);
             log.info("Create " + courses);
+
+            return createdCourses;
         } catch (RuntimeException e) {
             log.warn("Courses wasn`t created");
+            throw new EntityNotUpdatedException(courses + " weren`t created");
         }
     }
 
     @Override
-    public void delete(Long id) {
+    public Course deleteById(Long id) {
         try {
             Course course = courseRepository.findById(id).orElseThrow(EntityNotUpdatedException::new);
             courseRepository.delete(course);
 
             log.info("Delete course with id: " + id);
+            return course;
         } catch (RuntimeException e) {
             log.warn("Course with id: " + id + " not found");
             throw new EntityNotUpdatedException("Course wasn`t deleted");

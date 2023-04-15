@@ -89,8 +89,8 @@ public class ConsoleMenu {
         Long studentId = scanner.nextLong();
 
         try {
-            studentService.delete(studentId);
-            System.out.println("Student was deleted");
+            Student student = studentService.deleteById(studentId);
+            System.out.println(student + " was deleted");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
@@ -121,7 +121,7 @@ public class ConsoleMenu {
         Long courseId = scanner.nextLong();
 
         studentService.getStudentsByCourseId(courseId).forEach(System.out::println);
-        System.out.println("Enter id of student to delete him:");
+        System.out.println("Enter id of student to deleteById him:");
         Long studentId = scanner.nextLong();
 
         try {

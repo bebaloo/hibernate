@@ -2,7 +2,7 @@ package com.example.task_2_5_hibernate.service;
 
 import org.junit.jupiter.api.Test;
 
-class GroupServiceTest {
+class CourseServiceTest {
 
     @Test
     void getAll() {
@@ -26,9 +26,5 @@ class GroupServiceTest {
 
     @Test
     void delete() {
-    }
-
-    @Test
-    void getWithLessStudentsNumber() {
     }
 }

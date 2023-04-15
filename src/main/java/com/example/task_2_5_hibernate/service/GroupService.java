@@ -1,6 +1,6 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.dao.GroupRepository;
+import com.example.task_2_5_hibernate.repository.GroupRepository;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
 import lombok.RequiredArgsConstructor;
@@ -64,22 +64,26 @@ public class GroupService implements EntityService<Group, Long> {
     }
 
     @Override
-    public void createAll(List<Group> groups) {
+    public List<Group> createAll(List<Group> groups) {
         try {
-            groupRepository.saveAll(groups);
+            List<Group> createdGroups = groupRepository.saveAll(groups);
             log.info("Create + " + groups);
+
+            return createdGroups;
         } catch (RuntimeException e) {
             log.warn("Groups weren`t created");
+            throw new EntityNotUpdatedException(groups + " weren`t created");
         }
     }
 
     @Override
-    public void delete(Long id) {
+    public Group deleteById(Long id) {
         try {
             Group group = groupRepository.findById(id).orElseThrow(EntityNotUpdatedException::new);
             groupRepository.delete(group);
 
             log.info("Delete group with id: " + id);
+            return group;
         } catch (RuntimeException e) {
             log.warn("Group with id: " + id + " not found");
             throw new EntityNotUpdatedException("Group wasn`t deleted");

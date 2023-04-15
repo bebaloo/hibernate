@@ -1,4 +1,4 @@
-package com.example.task_2_5_hibernate.dao;
+package com.example.task_2_5_hibernate.repository;
 
 import com.example.task_2_5_hibernate.entity.Group;
 import org.junit.jupiter.api.Test;

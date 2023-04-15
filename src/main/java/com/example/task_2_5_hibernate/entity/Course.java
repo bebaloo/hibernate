@@ -25,6 +25,7 @@ public class Course {
     private String description;
 
     @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
+    @ToString.Exclude
     private Set<Student> students;
 
     public Course(Long id, String name, String desc) {
