@@ -22,7 +22,7 @@ public class Group {
     @Column(name = "group_name")
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "group", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", orphanRemoval = true)
     @ToString.Exclude
     private Set<Student> students;
 

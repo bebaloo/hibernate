@@ -16,7 +16,7 @@ import java.util.Set;
 @ToString
 public class Course {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
     private Long id;
     @Column(name = "course_name")
@@ -24,14 +24,14 @@ public class Course {
     @Column(name = "course_description")
     private String description;
 
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Student> students;
 
-    public Course(Long id, String name, String desc) {
+    public Course(Long id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.description = desc;
+        this.description = description;
     }
 
     public Course(String name, String description) {

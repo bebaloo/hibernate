@@ -36,7 +36,7 @@ class StudentServiceTest {
 
         when(studentRepository.findAll()).thenReturn(students);
 
-        assertTrue(studentService.getAll().containsAll(students));
+        assertEquals(studentService.getAll(), students);
         verify(studentRepository).findAll();
     }
 
