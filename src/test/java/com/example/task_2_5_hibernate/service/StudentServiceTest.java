@@ -4,6 +4,7 @@ import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
+import com.example.task_2_5_hibernate.mapper.StudentMapper;
 import com.example.task_2_5_hibernate.repository.CourseRepository;
 import com.example.task_2_5_hibernate.repository.StudentRepository;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ class StudentServiceTest {
     private StudentRepository studentRepository;
     @MockBean
     private CourseRepository courseRepository;
+    @MockBean
+    private StudentMapper studentMapper;
     @Autowired
     private StudentService studentService;
 

@@ -1,10 +1,11 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.repository.CourseRepository;
-import com.example.task_2_5_hibernate.repository.StudentRepository;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
+import com.example.task_2_5_hibernate.mapper.StudentMapper;
+import com.example.task_2_5_hibernate.repository.CourseRepository;
+import com.example.task_2_5_hibernate.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class StudentService implements EntityService<Student, Long> {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    private final StudentMapper studentMapper;
 
     @Override
     public List<Student> getAll() {
@@ -38,18 +40,12 @@ public class StudentService implements EntityService<Student, Long> {
     @Override
     public Student update(Student student) {
         try {
-            return studentRepository.findById(student.getId())
-                    .map(foundStudent -> {
-                        foundStudent.setFirstName(student.getFirstName());
-                        foundStudent.setLastName(student.getLastName());
-                        foundStudent.setGroup(student.getGroup());
-                        foundStudent.setCourses(student.getCourses());
+            Student updatedStudent = studentRepository.findById(student.getId()).orElseThrow(EntityNotUpdatedException::new);
+            studentMapper.updateStudent(student, updatedStudent);
+            studentRepository.save(updatedStudent);
 
-                        log.info(student + "was updated");
-
-                        return studentRepository.save(foundStudent);
-                    })
-                    .orElseThrow(EntityNotUpdatedException::new);
+            log.info(student + "was updated");
+            return updatedStudent;
         } catch (RuntimeException e) {
             log.warn(student + " wasn`t updated");
             throw new EntityNotUpdatedException(student + " wasn`t updated");

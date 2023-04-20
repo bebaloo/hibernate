@@ -2,6 +2,7 @@ package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
+import com.example.task_2_5_hibernate.mapper.CourseMapper;
 import com.example.task_2_5_hibernate.repository.CourseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import static org.mockito.Mockito.*;
 class CourseServiceTest {
     @Autowired
     private CourseService courseService;
+    @MockBean
+    private CourseMapper courseMapper;
     @MockBean
     private CourseRepository courseRepository;
 
@@ -50,7 +53,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void update_validStudent_returnsUpdatedStudent() {
+    void update_validCourse_returnsUpdatedStudent() {
         when(courseRepository.save(any(Course.class))).thenReturn(new Course(1L, "Name", "Desc"));
         when(courseRepository.findById(any(Long.class))).thenReturn(Optional.of(new Course(1L, "Name", "Desc")));
 
@@ -60,7 +63,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void update_invalidStudent_throwsException() {
+    void update_invalidCourse_throwsException() {
         when(courseRepository.findById(any(Long.class))).thenReturn(Optional.of(new Course(1L, "Name", "Desc")));
         when(courseRepository.save(any(Course.class))).thenThrow(IllegalArgumentException.class);
 
@@ -73,7 +76,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void create_validStudent_returnsSavedStudent() {
+    void create_validCourse_returnsSavedStudent() {
         when(courseRepository.save(any(Course.class))).thenReturn(new Course(1L, "Name", "Desc"));
 
         assertNotNull(courseService.create(new Course(1L, "Name", "Desc")));
@@ -81,7 +84,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void create_invalidStudent_throwsException() {
+    void create_invalidCourse_throwsException() {
         when(courseRepository.save(any(Course.class))).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,
@@ -92,7 +95,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void createAll_validStudent_returnsSavedStudent() {
+    void createAll_validCourse_returnsSavedStudent() {
         when(courseRepository.saveAll(anyList())).thenReturn(Collections.singletonList(new Course(1L, "Name", "Desc")));
 
         assertNotNull(courseService.createAll(Collections.singletonList(new Course(1L, "Name", "Desc"))));
@@ -100,7 +103,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void createAll_invalidStudent_throwsException() {
+    void createAll_invalidCourse_throwsException() {
         when(courseRepository.saveAll(anyList())).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,
@@ -111,7 +114,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void delete_validStudentId_returnsDeletedStudent() {
+    void delete_validCourseId_returnsDeletedStudent() {
         when(courseRepository.findById(any(Long.class))).thenReturn(Optional.of(new Course(1L, "Name", "Desc")));
 
         assertNotNull(courseService.deleteById(1L));
@@ -120,7 +123,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void delete_invalidStudentId_throwsException() {
+    void delete_invalidCourseId_throwsException() {
         when(courseRepository.findById(any(Long.class))).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,

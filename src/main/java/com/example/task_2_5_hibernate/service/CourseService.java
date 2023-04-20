@@ -1,8 +1,9 @@
 package com.example.task_2_5_hibernate.service;
 
-import com.example.task_2_5_hibernate.repository.CourseRepository;
 import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
+import com.example.task_2_5_hibernate.mapper.CourseMapper;
+import com.example.task_2_5_hibernate.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Log4j2
 public class CourseService implements EntityService<Course, Long> {
     private final CourseRepository courseRepository;
+    private final CourseMapper courseMapper;
 
     @Override
     public List<Course> getAll() {
@@ -35,16 +37,12 @@ public class CourseService implements EntityService<Course, Long> {
     @Override
     public Course update(Course course) {
         try {
-            return courseRepository.findById(course.getId())
-                    .map(foundCourse -> {
-                        foundCourse.setName(course.getName());
-                        foundCourse.setDescription(course.getDescription());
+            Course updatedCourse = courseRepository.findById(course.getId()).orElseThrow(EntityNotUpdatedException::new);
+            courseMapper.updateCourse(course, updatedCourse);
+            courseRepository.save(updatedCourse);
 
-                        log.info(course + "was updated");
-
-                        return courseRepository.save(foundCourse);
-                    })
-                    .orElseThrow(EntityNotUpdatedException::new);
+            log.info(updatedCourse + " was updated");
+            return updatedCourse;
         } catch (RuntimeException e) {
             log.warn(course + " wasn`t updated");
             throw new EntityNotUpdatedException(course + " wasn`t updated");

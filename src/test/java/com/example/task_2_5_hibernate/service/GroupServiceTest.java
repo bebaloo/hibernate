@@ -2,6 +2,7 @@ package com.example.task_2_5_hibernate.service;
 
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
+import com.example.task_2_5_hibernate.mapper.GroupMapper;
 import com.example.task_2_5_hibernate.repository.GroupRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ class GroupServiceTest {
     private GroupService groupService;
     @MockBean
     private GroupRepository groupRepository;
+    @MockBean
+    private GroupMapper groupMapper;
 
     @Test
     void getAll_returnsCourses() {
@@ -53,7 +56,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void update_validStudent_returnsUpdatedStudent() {
+    void update_validGroup_returnsUpdatedStudent() {
         when(groupRepository.save(any(Group.class))).thenReturn(new Group(1L, "aa-11"));
         when(groupRepository.findById(any(Long.class))).thenReturn(Optional.of(new Group(1L, "aa-11")));
 
@@ -63,7 +66,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void update_invalidStudent_throwsException() {
+    void update_invalidGroup_throwsException() {
         when(groupRepository.findById(any(Long.class))).thenReturn(Optional.of(new Group(1L, "aa-11")));
         when(groupRepository.save(any(Group.class))).thenThrow(IllegalArgumentException.class);
 
@@ -76,7 +79,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void create_validStudent_returnsSavedStudent() {
+    void create_validGroup_returnsSavedStudent() {
         when(groupRepository.save(any(Group.class))).thenReturn(new Group(1L, "aa-11"));
 
         assertNotNull(groupService.create(new Group(1L, "aa-11")));
@@ -84,7 +87,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void create_invalidStudent_throwsException() {
+    void create_invalidGroup_throwsException() {
         when(groupRepository.save(any(Group.class))).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,
@@ -95,7 +98,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void createAll_validStudent_returnsSavedStudent() {
+    void createAll_validGroup_returnsSavedStudent() {
         when(groupRepository.saveAll(anyList())).thenReturn(Collections.singletonList(new Group(1L, "aa-11")));
 
         assertNotNull(groupService.createAll(Collections.singletonList(new Group(1L, "aa-11"))));
@@ -103,7 +106,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void createAll_invalidStudent_throwsException() {
+    void createAll_invalidGroup_throwsException() {
         when(groupRepository.saveAll(anyList())).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,
@@ -114,7 +117,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void delete_validStudentId_returnsDeletedStudent() {
+    void delete_validGroupId_returnsDeletedStudent() {
         when(groupRepository.findById(any(Long.class))).thenReturn(Optional.of(new Group(1L, "aa-11")));
 
         assertNotNull(groupService.deleteById(1L));
@@ -123,7 +126,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void delete_invalidStudentId_throwsException() {
+    void delete_invalidGroupId_throwsException() {
         when(groupRepository.findById(any(Long.class))).thenThrow(IllegalArgumentException.class);
 
         EntityNotUpdatedException exception = assertThrows(EntityNotUpdatedException.class,

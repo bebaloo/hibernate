@@ -1,5 +1,6 @@
 package com.example.task_2_5_hibernate.service;
 
+import com.example.task_2_5_hibernate.mapper.GroupMapper;
 import com.example.task_2_5_hibernate.repository.GroupRepository;
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.exception.EntityNotUpdatedException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Log4j2
 public class GroupService implements EntityService<Group, Long> {
     private final GroupRepository groupRepository;
+    private final GroupMapper groupMapper;
 
     @Override
     public List<Group> getAll() {
@@ -35,15 +37,12 @@ public class GroupService implements EntityService<Group, Long> {
     @Override
     public Group update(Group group) {
         try {
-            return groupRepository.findById(group.getId())
-                    .map(foundGroup -> {
-                        foundGroup.setName(group.getName());
+            Group updatedGroup = groupRepository.findById(group.getId()).orElseThrow(EntityNotUpdatedException::new);
+            groupMapper.updateGroup(group, updatedGroup);
+            groupRepository.save(updatedGroup);
 
-                        log.info(group + "was updated");
-
-                        return groupRepository.save(foundGroup);
-                    })
-                    .orElseThrow(EntityNotUpdatedException::new);
+            log.info(updatedGroup + " was updated");
+            return updatedGroup;
         } catch (RuntimeException e) {
             log.warn(group + " wasn`t updated");
             throw new EntityNotUpdatedException(group + " wasn`t updated");
