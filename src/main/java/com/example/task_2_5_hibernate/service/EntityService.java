@@ -11,7 +11,7 @@ public interface EntityService<E, K> {
 
     E create(E entity);
 
-    void createAll(List<E> entities);
+    List<E> createAll(List<E> entities);
 
-    void delete(K id);
+    E deleteById(K id);
 }

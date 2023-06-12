@@ -19,7 +19,7 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_id")
-    private Integer id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
@@ -30,8 +30,8 @@ public class Student {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "students_courses",
-            joinColumns = {@JoinColumn(name = "student_id")},
-            inverseJoinColumns = {@JoinColumn(name = "course_id")})
+    joinColumns = {@JoinColumn(name = "student_id")},
+    inverseJoinColumns = {@JoinColumn(name = "course_id")})
     @ToString.Exclude
     private Set<Course> courses = new HashSet<>();
 
@@ -41,7 +41,7 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public Student(String firstName, String lastName, int groupId) {
+    public Student(String firstName, String lastName, Long groupId) {
         this.group = new Group(groupId);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,16 +52,11 @@ public class Student {
         this.lastName = lastName;
     }
 
-    public Student(int id, Group group, String firstName, String lastName) {
+    public Student(Long id, Group group, String firstName, String lastName) {
         this.id = id;
         this.group = group;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public void removeCourse(Course course) {
-        this.courses.remove(course);
-        course.getStudents().remove(this);
     }
 
     @Override

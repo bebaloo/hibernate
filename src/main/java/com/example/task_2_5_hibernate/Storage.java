@@ -46,7 +46,7 @@ public class Storage {
 
             student.setFirstName(faker.name().firstName());
             student.setLastName(faker.name().lastName());
-            student.setGroup(new Group(faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1])));
+            student.setGroup(new Group(Long.valueOf(faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]))));
 
             students.add(student);
         }
@@ -74,14 +74,16 @@ public class Storage {
     }
 
     private void saveStudentsToCourses() {
-        List<Integer> studentsId = studentService.getAll().stream()
+        List<Long> studentsId = studentService.getAll().stream()
                 .map(Student::getId)
                 .toList();
 
-        for (int studentId : studentsId) {
-            Student student = studentService.getById(studentId);
-            Course course = courseService.getById(faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
-            studentService.addStudentToCourse(student, course);
+        for (Long studentId : studentsId) {
+            try {
+                studentService.addStudentToCourse(studentId, (long) faker.number().numberBetween(ID_OF_GROUPS_COURSES[0], ID_OF_GROUPS_COURSES[1]));
+            } catch (RuntimeException e) {
+                log.warn(e.toString());
+            }
         }
     }
 }

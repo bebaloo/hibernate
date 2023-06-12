@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,21 +18,20 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
-    private Integer id;
+    private Long id;
     @Column(name = "course_name")
     private String name;
     @Column(name = "course_description")
     private String description;
 
-
-    @ManyToMany(mappedBy = "courses", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Set<Student> students = new HashSet<>();
+    private Set<Student> students;
 
-    public Course(int id, String name, String desc) {
+    public Course(Long id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.description = desc;
+        this.description = description;
     }
 
     public Course(String name, String description) {
@@ -46,7 +44,6 @@ public class Course {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Course course = (Course) o;
-
         return id != null && Objects.equals(id, course.id);
     }
 

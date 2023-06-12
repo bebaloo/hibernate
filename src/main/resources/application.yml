@@ -1,10 +1,8 @@
-app:
+spring:
   datasource:
-    main:
-      driver-class-name: org.postgresql.Driver
-      jdbc-url: jdbc:postgresql://localhost:5432/school-console-app
-      username: postgres
-      password: baloo
-
-      maximum-pool-size: 5
-      minimum-idle: 1
+    password: baloo
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/school-console-app
+  jpa:
+    hibernate:
+      ddl-auto: update

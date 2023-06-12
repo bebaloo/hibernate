@@ -1,7 +1,6 @@
 package com.example.task_2_5_hibernate;
 
 
-import com.example.task_2_5_hibernate.entity.Course;
 import com.example.task_2_5_hibernate.entity.Student;
 import com.example.task_2_5_hibernate.service.CourseService;
 import com.example.task_2_5_hibernate.service.GroupService;
@@ -71,7 +70,7 @@ public class ConsoleMenu {
 
         groupService.getAll().forEach(System.out::println);
         System.out.println("Enter group id:");
-        int groupId = scanner.nextInt();
+        Long groupId = scanner.nextLong();
 
         Student student = new Student(firstName, lastName, groupId);
         try {
@@ -87,11 +86,11 @@ public class ConsoleMenu {
         studentService.getAll().forEach(System.out::println);
 
         System.out.println("Enter id of student:");
-        int studentId = scanner.nextInt();
+        Long studentId = scanner.nextLong();
 
         try {
-            studentService.delete(studentId);
-            System.out.println("Student was deleted");
+            Student student = studentService.deleteById(studentId);
+            System.out.println(student + " was deleted");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
@@ -101,31 +100,35 @@ public class ConsoleMenu {
         studentService.getAll().forEach(System.out::println);
 
         System.out.println("Enter student id:");
-        int studentId = scanner.nextInt();
-        Student student = studentService.getById(studentId);
+        Long studentId = scanner.nextLong();
 
         courseService.getAll().forEach(System.out::println);
 
         System.out.println("Enter course id:");
-        int courseId = scanner.nextInt();
-        Course course = courseService.getById(courseId);
+        Long courseId = scanner.nextLong();
 
-        studentService.addStudentToCourse(student, course);
-        System.out.println("Student with id: " + studentId + " was added to course with id: " + courseId);
+        try {
+            studentService.addStudentToCourse(studentId, courseId);
+            System.out.println("Student with id: " + studentId + " was added to course with id: " + courseId);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void removeStudentFromCourse() {
         courseService.getAll().forEach(System.out::println);
         System.out.println("Enter id of course:");
-        int courseId = scanner.nextInt();
-        Course course = courseService.getById(courseId);
+        Long courseId = scanner.nextLong();
 
         studentService.getStudentsByCourseId(courseId).forEach(System.out::println);
-        System.out.println("Enter id of student to delete him:");
-        int studentId = scanner.nextInt();
+        System.out.println("Enter id of student to deleteById him:");
+        Long studentId = scanner.nextLong();
 
-        Student student = studentService.getById(studentId);
-        studentService.removeStudentFromCourse(student, course);
-        System.out.println("Student with id: " + studentId + " was deleted from course with id: " + courseId);
+        try {
+            studentService.removeStudentFromCourse(studentId, courseId);
+            System.out.println("Student with id: " + studentId + " was deleted from course with id: " + courseId);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

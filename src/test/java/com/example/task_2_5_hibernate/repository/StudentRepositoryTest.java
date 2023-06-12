@@ -1,4 +1,4 @@
-package com.example.task_2_5_hibernate.dao;
+package com.example.task_2_5_hibernate.repository;
 
 import com.example.task_2_5_hibernate.entity.Group;
 import com.example.task_2_5_hibernate.entity.Student;
@@ -18,55 +18,55 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TES
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-        StudentDao.class
+        StudentRepository.class
 }))
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(value = {"student-schema.sql", "init-students.sql"}, executionPhase = BEFORE_TEST_METHOD)
 @Sql(value = "clear-students.sql", executionPhase = AFTER_TEST_METHOD)
-class StudentDaoTest {
+class StudentRepositoryTest {
     @Autowired
-    private StudentDao studentDao;
+    private StudentRepository studentRepository;
 
     @Test
     void findAll_returnsStudents() {
         List<Student> expectedStudents = new ArrayList<>();
-        expectedStudents.add(new Student(1, new Group(1), "Dima", "Tkachuk"));
-        expectedStudents.add(new Student(2, new Group(1), "Yarik", "Shevchenko"));
-        expectedStudents.add(new Student(3, new Group(1), "Olga", "Melnyk"));
+        expectedStudents.add(new Student(1L, new Group(1L), "Dima", "Tkachuk"));
+        expectedStudents.add(new Student(2L, new Group(1L), "Yarik", "Shevchenko"));
+        expectedStudents.add(new Student(3L, new Group(1L), "Olga", "Melnyk"));
 
-        List<Student> actualStudents = studentDao.findAll();
+        List<Student> actualStudents = studentRepository.findAll();
 
         assertTrue(actualStudents.containsAll(expectedStudents));
     }
 
     @Test
     void findById_existingStudentId_returnsStudent() {
-        Student student = studentDao.findById(1).orElse(null);
+        Student student = studentRepository.findById(1L).orElse(null);
 
         assertNotNull(student);
     }
 
     @Test
     void findById_nonExistingStudentId_returnsNull() {
-        Student student = studentDao.findById(201).orElse(null);
+        Student student = studentRepository.findById(201L).orElse(null);
 
         assertNull(student);
     }
 
     @Test
     void update_correctStudent_Ok() {
-        Student studentBeforeUpdate = studentDao.findById(1).orElse(null);
-        assertEquals(studentBeforeUpdate, new Student(1, new Group(1, "aa-11"), "Dima", "Tkachuk"));
+        Student studentBeforeUpdate = studentRepository.findById(1L).orElse(null);
+        assertEquals(studentBeforeUpdate, new Student(1L, new Group(1L, "aa-11"), "Dima", "Tkachuk"));
 
-        Student studentAfterUpdate = studentDao.update(new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
+        Student studentAfterUpdate = studentRepository.save(new Student(1L, new Group(1L, "aa-11"), "Igor", "Frolov"));
 
-        assertEquals(studentAfterUpdate, new Student(1, new Group(1, "aa-11"), "Igor", "Frolov"));
+        assertEquals(studentAfterUpdate, new Student(1L, new Group(1L, "aa-11"), "Igor", "Frolov"));
     }
 
     @Test
     void remove_existingStudent_Ok() {
-        studentDao.delete(1);
-        boolean isEmptyAfterRemoving = studentDao.findById(1).isEmpty();
+        studentRepository.deleteById(1L);
+        boolean isEmptyAfterRemoving = studentRepository.findById(1L).isEmpty();
 
         assertTrue(isEmptyAfterRemoving);
     }
@@ -74,8 +74,8 @@ class StudentDaoTest {
 
     @Test
     void save_correctStudent_Ok() {
-        Student student = new Student(new Group(1, "aa-11"), "Oleg", "Guk");
-        Student savedStudent = studentDao.create(student);
+        Student student = new Student(new Group(1L, "aa-11"), "Oleg", "Guk");
+        Student savedStudent = studentRepository.save(student);
 
         assertEquals(savedStudent, student);
     }

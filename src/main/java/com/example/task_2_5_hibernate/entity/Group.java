@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "groups")
@@ -17,16 +18,25 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id")
-    private Integer id;
+    private Long id;
     @Column(name = "group_name")
     private String name;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "group", orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Student> students;
 
     public Group(String name) {
         this.name = name;
     }
 
-    public Group(int id) {
+    public Group(Long id) {
         this.id = id;
+    }
+
+    public Group(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
